@@ -1,16 +1,17 @@
+
 const hre = require("hardhat");
 
 async function main() {
-
-  await hre.run('compile');
+  
+  // await hre.run('compile');
 
   
-  const NFT_drop = await hre.ethers.getContractFactory("NFT_drop");
-  const nftDropContract = await NFT_drop.deploy("The traveler, NFT Drop");
+  const TheTraveler = await hre.ethers.getContractFactory("TheTraveler");
+  const thetraveler_contract = await TheTraveler.deploy("The traveler NFT!");
 
-  await nftDropContract.deployed();
+  await thetraveler_contract.deployed();
 
-  console.log("NFT_drop deployed to:", nftDropContract.address);
+  console.log("TheTraveler deployed to:", thetraveler_contract.address);
 }
 
 

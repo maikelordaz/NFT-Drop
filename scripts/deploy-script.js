@@ -6,12 +6,12 @@ async function main() {
   // await hre.run('compile');
 
   
-  const TheTraveler = await hre.ethers.getContractFactory("TheTraveler");
-  const thetraveler_contract = await TheTraveler.deploy("The traveler NFT!");
+  const TheLittleTraveler = await hre.ethers.getContractFactory("TheLittleTraveler");
+  const thelittletraveler_contract = await TheLittleTraveler.deploy("The little traveler NFT!");
 
-  await thetraveler_contract.deployed();
+  await thelittletraveler_contract.deployed();
 
-  console.log("TheTraveler deployed to:", thetraveler_contract.address);
+  console.log("TheLittleTraveler deployed to:", thelittletraveler_contract.address);
 }
 
 

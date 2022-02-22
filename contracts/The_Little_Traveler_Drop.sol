@@ -31,22 +31,29 @@ contract TheLittleTraveler is
 
 //VARIABLES
 
-    bytes32 public constant minter = keccak256("minter");
-    bytes32 public constant whitelisted = keccak256("whitelisted");
     Counters.Counter private _nftId;
-    uint whitelistMintFee = 0.005 ether;
-    uint mintFee = 0.01 ether;
-    enum Status {whitelist, minters}
-    Status public mintingStatus;
-   
-//MODIFIERS
 
-    modifier actualStatus(Status _mintingStatus) {
-        
-        require(mintingStatus == _mintingStatus);
-        _;
+    //ROLES
+        bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+        bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+        bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
+    
+    //FEES
+        uint whitelistMintFee = 0.005 ether;
+        uint mintFee = 0.01 ether;
 
-    }
+    //WHITELIST MINT
+        uint mintedByWhiteList = 0;
+        uint maxWhiteListMint = 4;
+
+    //NORMAL MINT
+        uint minted = 3;
+        uint maxMint = 11;
+
+//MAPPINGS
+
+    mapping (address => uint) ownerTokenCount;
+
 
 //EVENTS
 
@@ -59,8 +66,8 @@ contract TheLittleTraveler is
 
     constructor() ERC721("theLittleTraveler", "TLT") {
 
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(minter, msg.sender);
+        _setupRole(ADMIN_ROLE, msg.sender);
+        _setupRole(WHITELIST_ROLE, msg.sender);
 
     }
 
@@ -74,22 +81,19 @@ contract TheLittleTraveler is
 
     function pause() 
         public 
-        onlyRole(DEFAULT_ADMIN_ROLE) {
+        onlyRole(ADMIN_ROLE) {
             
             _pause();
             emit mintPaused("The mint is paused.");
-            console.log("The mint is still paused");
 
     }
 
     function unpause() 
         public 
-        onlyRole(DEFAULT_ADMIN_ROLE) {
+        onlyRole(ADMIN_ROLE) {
             
             _unpause();
-            mintingStatus = Status.whitelist;
-            emit mintUnPaused("The whitelist has started.");            
-            console.log("If you are from the whitelist, you can mint now!");
+            emit mintUnPaused("The whitelist has started.");
 
     }
 
@@ -104,25 +108,35 @@ contract TheLittleTraveler is
 
     }
     
+    function grantWhiteListRole(address whiteListAddress)
+        public
+        whenNotPaused
+        onlyRole(ADMIN_ROLE) {
+
+            _grantRole(WHITELIST_ROLE, whiteListAddress);
+
+    }
+
     function whitelistmint(address to) 
         public 
         whenNotPaused
-        onlyRole(whitelisted)
-        actualStatus(Status.whitelist)
+        onlyRole(WHITELIST_ROLE)
         payable {
 
-        require(msg.value == whitelistMintFee);
-        uint256 tokenId = _nftId.current();
-        for(uint i = 0; i < 4; i++) {
-
+            require
+                (msg.value == whitelistMintFee,
+                "You have to pay 0.005 ethers");
+            require
+                (mintedByWhiteList < maxWhiteListMint,
+                "There are no more tokens to mint");
+            require
+                (ownerTokenCount[to] == 0,
+                "You can not mint any more");
+            uint256 tokenId = _nftId.current();
             _nftId.increment();
             _safeMint(to, tokenId);
-
-        }
-
-        mintingStatus = Status.minters;
-        emit normalMint("The mint is paused.");            
-        console.log("The whitelist has finished, from now on, everyone can mint!");
+            mintedByWhiteList++;
+            ownerTokenCount[to]++;
 
     }
 
@@ -132,23 +146,35 @@ contract TheLittleTraveler is
       The contract has to be unpaused. 
     */
   
+    function grantMinterRole(address whiteListAddress)
+        public
+        whenNotPaused
+        onlyRole(ADMIN_ROLE) {
+
+            _grantRole(MINTER_ROLE, whiteListAddress);
+
+    }
+
     function mint(address to) 
         public 
         whenNotPaused
-        onlyRole(minter)
+        onlyRole(MINTER_ROLE) 
         payable {
 
-        require(msg.value == mintFee);
-        uint256 tokenId = _nftId.current();
-        for(uint j = 4; j < 10; j++) {
-
+            require
+                (msg.value == mintFee,
+                "You have to pay 0.01 ethers");
+            require
+                (minted < maxMint,
+                "There are no more tokens to mint");
+            require
+                (ownerTokenCount[to] == 0,
+                "You can not mint any more");
+            uint256 tokenId = _nftId.current();
             _nftId.increment();
             _safeMint(to, tokenId);
-
-        }
-
-        emit mintFinished("The mint has finished.");            
-        console.log("Every token has been minted");
+            minted++;
+            ownerTokenCount[to]++;
 
     }
 
@@ -178,8 +204,8 @@ contract TheLittleTraveler is
         public
         view
         override(ERC721, ERC721Enumerable, AccessControl)
-        returns (bool)
-    {
+        returns (bool) {
+
         return super.supportsInterface(interfaceId);
     }
     

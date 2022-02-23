@@ -1,7 +1,7 @@
 {
   "name": "Berlin trip",
   "description": "The people sound really mad",
-  "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/5.png",
+  "image": "https://ipfs.io/ipfs/QmUbXLKp2RZxoGPisaxvVZgkdzFr7hNBP3oMBF2CFCPLcU?filename=Berlin.png",
   "attributes": [
     {
       "trait_type": "Cities",

@@ -1,11 +1,11 @@
 {
-  "name": "New York trip",
-  "description": "I ride on a FDNY truck, AWESOME!",
-  "image": "ipfs://QmZxw4T7yCqPTkrUt2Gpr4gx4YFNbBnCXafUowz6tS5y2s/4.png",
+  "name": "Beijing trip",
+  "description": "The Chinesse food does not taste the same",
+  "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/3.png",
   "attributes": [
     {
       "trait_type": "Cities",
-      "value": "New_York"
+      "value": "Beijing"
     }
   ]
 }

@@ -22,6 +22,18 @@
     }
   ]
   },
+
+  {
+    "name": "Beijing trip",
+    "description": "The Chinesse food does not taste the same",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/3.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Beijing"
+      }
+    ]
+  },
  
   {
     "name": "New York trip",
@@ -31,6 +43,78 @@
       {
         "trait_type": "Cities",
         "value": "New_York"
+      }
+    ]
+  },
+
+  {
+    "name": "Berlin trip",
+    "description": "The people sound really mad",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/5.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Berlin"
+      }
+    ]
+  },
+
+  {
+    "name": "Paris",
+    "description": "I ate a le baguette",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/6.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Paris"
+      }
+    ]
+  },
+
+  {
+    "name": "Tokio trip",
+    "description": "Fast & Furious",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/7.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Tokio"
+      }
+    ]
+  },
+
+  {
+    "name": "Tokio trip",
+    "description": "Fast & Furious",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/7.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Tokio"
+      }
+    ]
+  },
+
+  {
+    "name": "London trip",
+    "description": "Do not let the muggles let you down",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/8.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "London"
+      }
+    ]
+  },
+
+  {
+    "name": "Caracas trip",
+    "description": "Where the bravest are born",
+    "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/9.png",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Caracas"
       }
     ]
   },

@@ -1,0 +1,11 @@
+{
+  "name": "Paris",
+  "description": "I ate a le baguette",
+  "image": "ipfs://QmSB8gxYbX58AmgAxjV1UM91GYiYwcrkLgezBDtbj95DjK/6.png",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Paris"
+    }
+  ]
+}

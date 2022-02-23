@@ -32,37 +32,46 @@ contract TheLittleTraveler is
 //VARIABLES
 
     Counters.Counter private _nftId;
+    enum Status {whiteListFinished}
+    Status public status;
 
     //ROLES
         bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
         bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
         bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
-    
+        
     //FEES
         uint whitelistMintFee = 0.005 ether;
         uint mintFee = 0.01 ether;
 
     //WHITELIST MINT
         uint mintedByWhiteList = 0;
-        uint maxWhiteListMint = 4;
+        uint maxWhiteListMint = 3;
 
     //NORMAL MINT
-        uint minted = 3;
-        uint maxMint = 11;
+        uint minted = 0;
+        uint maxMint = 2;
 
 //MAPPINGS
-
     mapping (address => uint) ownerTokenCount;
-
+    mapping (address => uint) whiteListUser; //To check if the user is from the whitelist.
 
 //EVENTS
-
     event mintPaused(string);
     event mintUnPaused(string);
-    event normalMint (string);
+    event whiteListOver (string);
     event mintFinished (string);
 
-//CONSTRUCTOR
+//MODIFIERS
+
+    modifier actualStatus(Status _status) {
+
+        require(status == _status);
+        _;
+
+    }
+
+//FUNCTIONS
 
     constructor() ERC721("theLittleTraveler", "TLT") {
 
@@ -71,14 +80,12 @@ contract TheLittleTraveler is
 
     }
 
-//FUNCTIONS
     
     /** 
     * @dev this functions are related to pause or unpause the drop and minting process.
       Only the admin can call this functions.
       The admin has to unpause the minting process to start.
     */
-
     function pause() 
         public 
         onlyRole(ADMIN_ROLE) {
@@ -98,7 +105,6 @@ contract TheLittleTraveler is
     }
 
     /// @dev this functions allow the addresses from the whitelist to mint.
-
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal
         whenNotPaused
@@ -108,16 +114,26 @@ contract TheLittleTraveler is
 
     }
     
+    /**
+    * @dev this functions are related to he minting process.
+      Only the minters can call this functions.
+      The contract has to be unpaused. 
+    
+    * @param whiteListAddress to check with the mapping called whiteListUser
+    */
     function grantWhiteListRole(address whiteListAddress)
         public
         whenNotPaused
         onlyRole(ADMIN_ROLE) {
 
+            uint whiteListReserved = whiteListUser[msg.sender];
+            require(whiteListUser[whiteListAddress] == whiteListReserved);
             _grantRole(WHITELIST_ROLE, whiteListAddress);
 
     }
 
-    function whitelistmint(address to) 
+    /// @param to is an address with the WHITELIST_ROLE
+    function whitelistmint(address to, string memory uri) 
         public 
         whenNotPaused
         onlyRole(WHITELIST_ROLE)
@@ -135,8 +151,15 @@ contract TheLittleTraveler is
             uint256 tokenId = _nftId.current();
             _nftId.increment();
             _safeMint(to, tokenId);
+            _setTokenURI(tokenId, uri);
             mintedByWhiteList++;
             ownerTokenCount[to]++;
+            if (mintedByWhiteList == maxWhiteListMint) {
+
+                status = Status.whiteListFinished;
+                emit whiteListOver("The mint for the whitelists is over");
+
+            }
 
     }
 
@@ -144,21 +167,24 @@ contract TheLittleTraveler is
     * @dev this functions are related to he minting process.
       Only the minters can call this functions.
       The contract has to be unpaused. 
+    * @param minterAddress the one who receive the MINTER_ROLE
     */
   
-    function grantMinterRole(address whiteListAddress)
+    function grantMinterRole(address minterAddress)
         public
         whenNotPaused
         onlyRole(ADMIN_ROLE) {
 
-            _grantRole(MINTER_ROLE, whiteListAddress);
+                _grantRole(MINTER_ROLE, minterAddress);
 
     }
 
-    function mint(address to) 
+    /// @param to is an address with the MINTER_ROLE
+    function mint(address to, string memory uri) 
         public 
         whenNotPaused
         onlyRole(MINTER_ROLE) 
+        actualStatus(Status.whiteListFinished)
         payable {
 
             require
@@ -173,8 +199,14 @@ contract TheLittleTraveler is
             uint256 tokenId = _nftId.current();
             _nftId.increment();
             _safeMint(to, tokenId);
+            _setTokenURI(tokenId, uri);
             minted++;
             ownerTokenCount[to]++;
+            if (minted == maxMint) {
+
+                emit mintFinished("the mint process has finished.");
+
+            }
 
     }
 

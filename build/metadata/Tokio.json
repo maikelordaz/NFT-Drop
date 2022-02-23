@@ -1,7 +1,7 @@
 {
   "name": "Tokio trip",
   "description": "Fast & Furious",
-  "image": "https://ipfs.io/ipfs/QmVNU9XeusUnXCXftyY5jdftHgkiAc5bsDxRXh1y1aDyNo?filename=Tokio.png",
+  "image": "ipfs://QmVNU9XeusUnXCXftyY5jdftHgkiAc5bsDxRXh1y1aDyNo",
   "attributes": [
     {
       "trait_type": "Cities",

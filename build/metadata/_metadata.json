@@ -2,7 +2,7 @@
   {
     "name": "Beijing trip",
     "description": "The Chinesse food does not taste the same",
-    "image": "https://ipfs.io/ipfs/QmTAcyMvHRHritUp35wetw6ba3C9qvLrMNkrx8X2fyXmiY?filename=Beijing.png",
+    "image": "ipfs://QmTAcyMvHRHritUp35wetw6ba3C9qvLrMNkrx8X2fyXmiY",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -14,7 +14,7 @@
   {
     "name": "Berlin trip",
     "description": "The people sound really mad",
-    "image": "https://ipfs.io/ipfs/QmUbXLKp2RZxoGPisaxvVZgkdzFr7hNBP3oMBF2CFCPLcU?filename=Berlin.png",
+    "image": "ipfs://QmUbXLKp2RZxoGPisaxvVZgkdzFr7hNBP3oMBF2CFCPLcU",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -26,7 +26,7 @@
   {
     "name": "Caracas trip",
     "description": "Where the bravest are born",
-    "image": "https://ipfs.io/ipfs/QmVLzGqfR6urNXJjXvhqkrQPRnij7j8RcPgBwuAydJusTL?filename=Caracas.png",
+    "image": "ipfs://QmVLzGqfR6urNXJjXvhqkrQPRnij7j8RcPgBwuAydJusTL",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -38,7 +38,7 @@
   {
     "name": "Dubai trip",
   "description": "The Burj Khalifa is really high",
-  "image": "https://ipfs.io/ipfs/QmWhRJe7Ut6BzY4Ep78LMwYVDfG19zysuauWpn8Dhx2ccN?filename=Dubai.png",
+  "image": "ipfs://QmWhRJe7Ut6BzY4Ep78LMwYVDfG19zysuauWpn8Dhx2ccN",
   "attributes": [
     {
       "trait_type": "Cities",
@@ -50,7 +50,7 @@
   {
     "name": "London trip",
     "description": "Do not let the muggles let you down",
-    "image": "https://ipfs.io/ipfs/QmQWS1XzfGRXtHz9LCqrd7mHDcik6YFQ8GDzV1Ag9LFHtj?filename=London.png",
+    "image": "ipfs://QmQWS1XzfGRXtHz9LCqrd7mHDcik6YFQ8GDzV1Ag9LFHtj",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -62,7 +62,7 @@
   {
     "name": "New York trip",
     "description": "I ride on a FDNY truck, AWESOME!",
-    "image": "https://ipfs.io/ipfs/QmeLGpb3UAKm3ya46qHyoYJ5CLBzaFVycdzpS5LYMSRD5U?filename=New%20_York.png",
+    "image": "ipfs://QmeLGpb3UAKm3ya46qHyoYJ5CLBzaFVycdzpS5LYMSRD5U",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -74,7 +74,7 @@
   {
     "name": "Osaka trip",
     "description": "楽しかったよ",
-    "image": "https://ipfs.io/ipfs/QmTqcvheKs6mnVwh6Rg4vVLfGm4JCpeYnTqAAJGKUs9KwX?filename=Osaka.png",
+    "image": "ipfs://QmTqcvheKs6mnVwh6Rg4vVLfGm4JCpeYnTqAAJGKUs9KwX",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -86,7 +86,7 @@
   {
     "name": "Paris",
     "description": "I ate a le baguette",
-    "image": "https://ipfs.io/ipfs/QmUJV7CNeonJAE3siJh9MYY93X3sZteLCSnKiDbtw6nZGJ?filename=Paris.png",
+    "image": "ipfs://QmUJV7CNeonJAE3siJh9MYY93X3sZteLCSnKiDbtw6nZGJ",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -98,7 +98,7 @@
   {
     "name": "Sidney trip",
     "description": "I was looking for Nemo",
-    "image": "https://ipfs.io/ipfs/QmQmUbz7PBK6KnK7eQDgo9mcdM16UWircLb3n7iWEpu46C?filename=Sydney.png",
+    "image": "ipfs://QmQmUbz7PBK6KnK7eQDgo9mcdM16UWircLb3n7iWEpu46C",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -110,7 +110,7 @@
   {
     "name": "Tokio trip",
     "description": "Fast & Furious",
-    "image": "https://ipfs.io/ipfs/QmVNU9XeusUnXCXftyY5jdftHgkiAc5bsDxRXh1y1aDyNo?filename=Tokio.png",
+    "image": "ipfs://QmVNU9XeusUnXCXftyY5jdftHgkiAc5bsDxRXh1y1aDyNo",
     "attributes": [
       {
         "trait_type": "Cities",
@@ -122,7 +122,7 @@
   {
     "name": "Hidden",
     "description": "???????",
-    "image": "https://ipfs.io/ipfs/QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G?filename=Hidden.png",
+    "image": "ipfs://QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G",
     "attributes": [
       {
         "trait_type": "Cities",

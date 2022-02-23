@@ -1,7 +1,7 @@
 {
   "name": "Caracas trip",
   "description": "Where the bravest are born",
-  "image": "https://ipfs.io/ipfs/QmVLzGqfR6urNXJjXvhqkrQPRnij7j8RcPgBwuAydJusTL?filename=Caracas.png",
+  "image": "ipfs://QmVLzGqfR6urNXJjXvhqkrQPRnij7j8RcPgBwuAydJusTL",
   "attributes": [
     {
       "trait_type": "Cities",

@@ -1,7 +1,7 @@
 {
   "name": "Hidden",
   "description": "???????",
-  "image": "https://ipfs.io/ipfs/QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G?filename=Hidden.png",
+  "image": "ipfs://QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G",
   "attributes": [
     {
       "trait_type": "Cities",

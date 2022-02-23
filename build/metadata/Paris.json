@@ -1,7 +1,7 @@
 {
   "name": "Paris",
   "description": "I ate a le baguette",
-  "image": "https://ipfs.io/ipfs/QmUJV7CNeonJAE3siJh9MYY93X3sZteLCSnKiDbtw6nZGJ?filename=Paris.png",
+  "image": "ipfs://QmUJV7CNeonJAE3siJh9MYY93X3sZteLCSnKiDbtw6nZGJ",
   "attributes": [
     {
       "trait_type": "Cities",

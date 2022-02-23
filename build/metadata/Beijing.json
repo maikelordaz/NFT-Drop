@@ -1,7 +1,7 @@
 {
   "name": "Beijing trip",
   "description": "The Chinesse food does not taste the same",
-  "image": "https://ipfs.io/ipfs/QmTAcyMvHRHritUp35wetw6ba3C9qvLrMNkrx8X2fyXmiY?filename=Beijing.png",
+  "image": "ipfs://QmTAcyMvHRHritUp35wetw6ba3C9qvLrMNkrx8X2fyXmiY",
   "attributes": [
     {
       "trait_type": "Cities",

@@ -1,7 +1,7 @@
 {
   "name": "Sidney trip",
   "description": "I was looking for Nemo",
-  "image": "https://ipfs.io/ipfs/QmQmUbz7PBK6KnK7eQDgo9mcdM16UWircLb3n7iWEpu46C?filename=Sydney.png",
+  "image": "ipfs://QmQmUbz7PBK6KnK7eQDgo9mcdM16UWircLb3n7iWEpu46C",
   "attributes": [
     {
       "trait_type": "Cities",

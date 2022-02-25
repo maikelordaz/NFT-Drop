@@ -9,8 +9,8 @@ pragma solidity ^0.8.4;
 
 //CONTRACTS IMPORTS 
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 //LIBRARIES IMPORTS
 
@@ -19,7 +19,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 //CONTRACT 
 
-contract TheLittleTraveler is ERC721, AccessControl {
+contract TheLittleTraveler is ERC721URIStorage, AccessControl {
     
     using Strings for uint256;
     using Counters for Counters.Counter;
@@ -204,6 +204,17 @@ contract TheLittleTraveler is ERC721, AccessControl {
     /**
     * @dev This are four functions related to set the URI of the Token as for the hidden image.
     */    
+    function setTokenURI(uint tokenId, string memory _tokenURI)
+        public {
+
+            tokenId = _nftId.current();
+            require
+                (_isApprovedOrOwner(_msgSender(), tokenId),
+                "ERC721: transfer caller is not the owner nor approved");
+            _setTokenURI(tokenId, _tokenURI);
+            
+
+    }
     function tokenURI(uint256 tokenId)
         public
         view

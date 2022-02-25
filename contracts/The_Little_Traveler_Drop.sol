@@ -9,24 +9,19 @@ pragma solidity ^0.8.4;
 
 //CONTRACTS IMPORTS 
 
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 //LIBRARIES IMPORTS
 
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "hardhat/console.sol";
 
 //CONTRACT 
 
-contract TheLittleTraveler is 
-                            ERC721Enumerable, 
-                            Pausable, 
-                            AccessControl,
-                            ERC721URIStorage {
+contract TheLittleTraveler is ERC721, AccessControl {
     
+    using Strings for uint256;
     using Counters for Counters.Counter;
 
 //VARIABLES
@@ -34,6 +29,12 @@ contract TheLittleTraveler is
     Counters.Counter private _nftId;
     enum Status {whiteListFinished}
     Status public status;
+    uint public maxSuply = 10;
+    bool public paused = true;
+    bool public revealed = false;
+    string public uriPrefix = "";
+    string public uriSuffix = ".json";
+    string public hiddenMetadataUri;
 
     //ROLES
         bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
@@ -41,16 +42,16 @@ contract TheLittleTraveler is
         bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
         
     //FEES
-        uint whitelistMintFee = 0.005 ether;
-        uint mintFee = 0.01 ether;
+        uint public whitelistMintFee = 0.005 ether;
+        uint public mintFee = 0.01 ether;
 
     //WHITELIST MINT
         uint mintedByWhiteList = 0;
-        uint maxWhiteListMint = 3;
+        uint maxWhiteListMint = 2;
 
     //NORMAL MINT
-        uint minted = 0;
-        uint maxMint = 2;
+        uint minted = 2;
+        uint maxMint = 10;
 
 //MAPPINGS
     mapping (address => uint) ownerTokenCount;
@@ -73,125 +74,108 @@ contract TheLittleTraveler is
 
 //FUNCTIONS
 
-    constructor() ERC721("theLittleTraveler", "TLT") {
+    constructor() ERC721("The Little Traveler", "TLT") {
 
         _setupRole(ADMIN_ROLE, msg.sender);
         _setupRole(WHITELIST_ROLE, msg.sender);
-
-    }
-
-    
+    }  
     /** 
-    * @dev this functions are related to pause or unpause the drop and minting process.
-      Only the admin can call this functions.
-      The admin has to unpause the minting process to start.
+    * @dev this function is related to pause or unpause the drop.
+      Only the admin can call this function.
+    * @param _state it gives true or false to the variable paused.
+    */ 
+    function setPaused(bool _state) 
+        public 
+        onlyRole(ADMIN_ROLE) {
+            
+        paused = _state;
+    }
+    /** 
+    * @dev this function is related to the hidden image before the NFT is revealed.
+      Only the admin can call this function.
+    * @param _state it gives true or false to the variable revealed.
     */
-    function pause() 
+    function setRevealed(bool _state) 
         public 
         onlyRole(ADMIN_ROLE) {
-            
-            _pause();
-            emit mintPaused("The mint is paused.");
 
-    }
-
-    function unpause() 
-        public 
-        onlyRole(ADMIN_ROLE) {
-            
-            _unpause();
-            emit mintUnPaused("The whitelist has started.");
-
-    }
-
-    /// @dev this functions allow the addresses from the whitelist to mint.
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        whenNotPaused
-        override(ERC721, ERC721Enumerable) {
-
-        super._beforeTokenTransfer(from, to, tokenId);
-
-    }
-    
+            revealed = _state;
+    } 
     /**
-    * @dev this functions are related to he minting process.
-      Only the minters can call this functions.
-      The contract has to be unpaused. 
-    
-    * @param whiteListAddress to check with the mapping called whiteListUser
+    * @dev this function is to grant access to the whitelist to an address.
+    * @param whiteListAddress if the address is part of the whiteListUser mapping it has to pay
+      0.005 ethers to gain the whitelist role.
     */
     function grantWhiteListRole(address whiteListAddress)
-        public
-        whenNotPaused
-        onlyRole(ADMIN_ROLE) {
+        public 
+        payable {
 
             uint whiteListReserved = whiteListUser[msg.sender];
             require(whiteListUser[whiteListAddress] == whiteListReserved);
-            _grantRole(WHITELIST_ROLE, whiteListAddress);
-
-    }
-
-    /// @param to is an address with the WHITELIST_ROLE
-    function whitelistmint(address to, string memory uri) 
-        public 
-        whenNotPaused
-        onlyRole(WHITELIST_ROLE)
-        payable {
-
             require
                 (msg.value == whitelistMintFee,
-                "You have to pay 0.005 ethers");
-            require
-                (mintedByWhiteList < maxWhiteListMint,
-                "There are no more tokens to mint");
-            require
-                (ownerTokenCount[to] == 0,
-                "You can not mint any more");
-            uint256 tokenId = _nftId.current();
-            _nftId.increment();
-            _safeMint(to, tokenId);
-            _setTokenURI(tokenId, uri);
-            mintedByWhiteList++;
-            ownerTokenCount[to]++;
-            if (mintedByWhiteList == maxWhiteListMint) {
-
-                status = Status.whiteListFinished;
-                emit whiteListOver("The mint for the whitelists is over");
-
-            }
-
+                "You have to pay 0.005 ethers");        
+            _grantRole(WHITELIST_ROLE, whiteListAddress);
     }
-
     /**
-    * @dev this functions are related to he minting process.
-      Only the minters can call this functions.
-      The contract has to be unpaused. 
-    * @param minterAddress the one who receive the MINTER_ROLE
+    * @dev this function is to grant the minter role to an address.
+    * @param minterAddress The address has to pay 0.01 ethers to gain the minter role.
     */
-  
     function grantMinterRole(address minterAddress)
         public
-        whenNotPaused
-        onlyRole(ADMIN_ROLE) {
-
-                _grantRole(MINTER_ROLE, minterAddress);
-
-    }
-
-    /// @param to is an address with the MINTER_ROLE
-    function mint(address to, string memory uri) 
-        public 
-        whenNotPaused
-        onlyRole(MINTER_ROLE) 
-        actualStatus(Status.whiteListFinished)
+        onlyRole(ADMIN_ROLE) 
         payable {
 
             require
                 (msg.value == mintFee,
                 "You have to pay 0.01 ethers");
+            _grantRole(MINTER_ROLE, minterAddress);
+    }
+    /**
+    * @dev this function is for the minting by the whitelist. It makes some checks, first paused
+      has to be false, second there has to be token left for the whitelist and third the address
+      can not have any token. Only the WHITELIST_ROLE can call it.
+    * @param to is an address with the WHITELIST_ROLE
+    */
+    function whitelistmint(address to) 
+        public 
+        onlyRole(WHITELIST_ROLE) {
+
             require
-                (minted < maxMint,
+                (!paused, "The contract is paused!");
+            require
+                (mintedByWhiteList <= maxWhiteListMint,
+                "There are no more tokens to mint");
+            require
+                (ownerTokenCount[to] == 0,
+                "You can not mint any more");
+            uint256 tokenId = _nftId.current();
+            _nftId.increment();
+            _safeMint(to, tokenId);            
+            mintedByWhiteList++;
+            maxSuply--;
+            ownerTokenCount[to]++;            
+            if (mintedByWhiteList == maxWhiteListMint) {
+
+                status = Status.whiteListFinished;
+                emit whiteListOver("The mint for the whitelists is over");
+            }
+    }
+    /**
+    * @dev this function is for the minting by the regular users. It makes some checks, first paused
+      has to be false, second there has to be token left for the whitelist and third the address
+      can not have any token.
+    * @param to is an address with the WHITELIST_ROLE
+    */
+    function mint(address to) 
+        public 
+        onlyRole(MINTER_ROLE) 
+        actualStatus(Status.whiteListFinished) {
+
+            require
+                (!paused, "The contract is paused!");
+            require
+                (minted <= maxMint,
                 "There are no more tokens to mint");
             require
                 (ownerTokenCount[to] == 0,
@@ -199,46 +183,106 @@ contract TheLittleTraveler is
             uint256 tokenId = _nftId.current();
             _nftId.increment();
             _safeMint(to, tokenId);
-            _setTokenURI(tokenId, uri);
             minted++;
+            maxSuply--;
             ownerTokenCount[to]++;
             if (minted == maxMint) {
 
                 emit mintFinished("the mint process has finished.");
-
             }
-
     }
+    /** 
+    * @dev this function is to check how many tokens are left
+    */
+    function NFTLeft() 
+        public 
+        view 
+        returns (uint256) {
 
-    /// @dev This function is to set the URI of the Token.
-
+            return maxSuply;
+    }
+    /**
+    * @dev This are four functions related to set the URI of the Token as for the hidden image.
+    */    
     function tokenURI(uint256 tokenId)
         public
         view
-        override (ERC721, ERC721URIStorage)
+        virtual
+        override
         returns (string memory) {
 
-            return super.tokenURI(tokenId);
-
+            tokenId = _nftId.current(); 
+            require
+                (_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+            if (revealed == false) {
+                
+                return hiddenMetadataUri;
+            }
+            string memory currentBaseURI = _baseURI();
+            return bytes(currentBaseURI).length > 0
+            ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), uriSuffix))
+            : "";
     }
 
-    /// @dev This function is to burn the NFT delete the Token´s Id and the Token´s URI.
+    function setHiddenMetadataUri(string memory _hiddenMetadataUri) 
+        public 
+        onlyRole(ADMIN_ROLE) {
 
-    function _burn(uint256 tokenId) 
+            hiddenMetadataUri = _hiddenMetadataUri;
+    }
+
+    function setUriPrefix(string memory _uriPrefix) 
+        public 
+        onlyRole(ADMIN_ROLE) {
+
+            uriPrefix = _uriPrefix;
+    }
+
+    function setUriSuffix(string memory _uriSuffix) 
+        public 
+        onlyRole(ADMIN_ROLE) {
+
+            uriSuffix = _uriSuffix;
+    }
+
+    function _baseURI() 
         internal 
-        override(ERC721, ERC721URIStorage) {
+        view 
+        virtual 
+        override 
+        returns (string memory) {
+
+            return uriPrefix;
+    }
+
+    /**
+    *@dev a function to withdraw the payments for the mint.
+    */
+    function withdraw() 
+        public 
+        payable 
+        onlyRole(ADMIN_ROLE) {
         
-            super._burn(tokenId);
-
+            payable(msg.sender).transfer(address(this).balance);        
     }
 
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721Enumerable, AccessControl)
-        returns (bool) {
-
+    /**
+    * @dev the next three functions are used only for the test of the contract
+    */
+    function isAdmin(address account) public virtual view returns(bool) {
+        return hasRole(ADMIN_ROLE, account);
+    }
+    function isWhitelist(address account) public virtual view returns(bool) {
+        return hasRole(WHITELIST_ROLE, account);
+    }
+    function isMinter(address account) public virtual view returns(bool) {            
+        return hasRole(MINTER_ROLE, account);
+    }
+    /**
+    * @dev last but not least a function to overcome the override of inheritaded contracts
+    */    
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl)
+    returns (bool) {
         return super.supportsInterface(interfaceId);
-    }
-    
+    }    
 }

@@ -11,6 +11,7 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 //LIBRARIES IMPORTS
 
@@ -19,7 +20,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 //CONTRACT 
 
-contract TheLittleTraveler is ERC721URIStorage, AccessControl {
+contract TheLittleTraveler is ERC721, ERC721URIStorage, AccessControl {
     
     using Strings for uint256;
     using Counters for Counters.Counter;
@@ -27,15 +28,12 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
 //VARIABLES
 
     Counters.Counter private _nftId;
-    enum Status {whiteListFinished}
-    Status public status;
     uint public maxSuply = 10;
     bool public paused = true;
     bool public revealed = false;
-    string public uriPrefix = "";
-    string public uriSuffix = ".json";
-    string public hiddenMetadataUri;
-
+    string [] internal _URIs;
+    address public collaborator;
+    
     //ROLES
         bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
         bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -57,27 +55,24 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
     mapping (address => uint) ownerTokenCount;
     mapping (address => uint) whiteListUser; //To check if the user is from the whitelist.
 
-//EVENTS
-    event mintPaused(string);
-    event mintUnPaused(string);
-    event whiteListOver (string);
-    event mintFinished (string);
-
-//MODIFIERS
-
-    modifier actualStatus(Status _status) {
-
-        require(status == _status);
-        _;
-
-    }
-
 //FUNCTIONS
 
     constructor() ERC721("The Little Traveler", "TLT") {
 
         _setupRole(ADMIN_ROLE, msg.sender);
         _setupRole(WHITELIST_ROLE, msg.sender);
+        _setupRole(MINTER_ROLE, collaborator);
+        _URIs = ["QmXgRgBGBrbWgrt4NtNHYa8D7y6EWmgPe9jqv1si8aHUB6",
+                 "QmRny92uQhNxwUMaWXqvLQkzy4BXJVDcRVGZSH6nf9BgMz",
+                 "QmbvuE9aa1cM1CiKwWCtvpGbUz3kvU5xtEszvVVZFqUSWv",
+                 "QmUxhY9S5JeM8dWv3htzaTNq11XJJqTVPp1Mowhc8ArUP9",
+                 "QmSBmBXhbvAmGZpCsq8CyMLBLS6tzg9Ph9VJhNGDnZVPXj",
+                 "QmRuoq5zvwcHAw2tLvGMTfWujhaNQDgZxqY1Amkakpvxdx",
+                 "QmPhxoJi14YaVmMaHHtUyBGX5zFEYiKUMcAXJiGAS9PT8K",
+                 "QmaHZxnhWzfMvNL7nbeHt2gpc4VaoNVPAeRAaeibiFscSK",
+                 "QmW9ytaZHKjfSgPMhs2CHXFMsTQu7W7pu2XYBTgodyq2eX",
+                 "QmfS4eo2atBz6Xyz8Rs61X54g1izADSWys2GV5X82akYTZ"];
+
     }  
     /** 
     * @dev this function is related to pause or unpause the drop.
@@ -102,42 +97,35 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
             revealed = _state;
     } 
     /**
-    * @dev this function is to grant access to the whitelist to an address.
-    * @param whiteListAddress if the address is part of the whiteListUser mapping it has to pay
-      0.005 ethers to gain the whitelist role.
+    * @dev this function is to grant access to the whitelist to an address. If the address is part
+      of the whiteListUser mapping it has to pay 0.005 ethers to gain the whitelist role.
     */
-    function grantWhiteListRole(address whiteListAddress)
+    function grantWhiteListRole()
         public 
         payable {
 
             uint whiteListReserved = whiteListUser[msg.sender];
-            require(whiteListUser[whiteListAddress] == whiteListReserved);
+            require(whiteListUser[msg.sender] == whiteListReserved);
             require
                 (msg.value == whitelistMintFee,
                 "You have to pay 0.005 ethers");        
-            _grantRole(WHITELIST_ROLE, whiteListAddress);
+            _grantRole(WHITELIST_ROLE, msg.sender);
     }
     /**
-    * @dev this function is to grant the minter role to an address.
-    * @param minterAddress The address has to pay 0.01 ethers to gain the minter role.
+    * @dev this function is to grant the minter role to an address. It has to pay 0.01 ethers to
+      gain the minter role.
     */
-    function grantMinterRole(address minterAddress)
-        public
-        onlyRole(ADMIN_ROLE) 
-        payable {
+    function grantMinterRole()
+        public {
 
-            require
-                (msg.value == mintFee,
-                "You have to pay 0.01 ethers");
-            _grantRole(MINTER_ROLE, minterAddress);
+             _grantRole(MINTER_ROLE, msg.sender);
     }
     /**
     * @dev this function is for the minting by the whitelist. It makes some checks, first paused
       has to be false, second there has to be token left for the whitelist and third the address
       can not have any token. Only the WHITELIST_ROLE can call it.
-    * @param to is an address with the WHITELIST_ROLE
     */
-    function whitelistmint(address to) 
+    function whitelistmint() 
         public 
         onlyRole(WHITELIST_ROLE) {
 
@@ -147,49 +135,40 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
                 (mintedByWhiteList <= maxWhiteListMint,
                 "There are no more tokens to mint");
             require
-                (ownerTokenCount[to] == 0,
+                (ownerTokenCount[msg.sender] == 0,
                 "You can not mint any more");
             uint256 tokenId = _nftId.current();
             _nftId.increment();
-            _safeMint(to, tokenId);            
+            _safeMint(msg.sender, tokenId); 
+            _setTokenURI(tokenId, _URIs[tokenId]);           
             mintedByWhiteList++;
             maxSuply--;
-            ownerTokenCount[to]++;            
-            if (mintedByWhiteList == maxWhiteListMint) {
-
-                status = Status.whiteListFinished;
-                emit whiteListOver("The mint for the whitelists is over");
-            }
+            ownerTokenCount[msg.sender]++;         
     }
     /**
     * @dev this function is for the minting by the regular users. It makes some checks, first paused
       has to be false, second there has to be token left for the whitelist and third the address
       can not have any token.
-    * @param to is an address with the WHITELIST_ROLE
     */
-    function mint(address to) 
+    function mint() 
         public 
         onlyRole(MINTER_ROLE) 
-        actualStatus(Status.whiteListFinished) {
+        payable {
 
+            require
+                (msg.value == mintFee,
+                "You have to pay 0.01 ethers");
             require
                 (!paused, "The contract is paused!");
             require
                 (minted <= maxMint,
                 "There are no more tokens to mint");
-            require
-                (ownerTokenCount[to] == 0,
-                "You can not mint any more");
             uint256 tokenId = _nftId.current();
             _nftId.increment();
-            _safeMint(to, tokenId);
+            _safeMint(msg.sender, tokenId);
+            _setTokenURI(tokenId, _URIs[tokenId]);
             minted++;
             maxSuply--;
-            ownerTokenCount[to]++;
-            if (minted == maxMint) {
-
-                emit mintFinished("the mint process has finished.");
-            }
     }
     /** 
     * @dev this function is to check how many tokens are left
@@ -202,58 +181,19 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
             return maxSuply;
     }
     /**
-    * @dev This are four functions related to set the URI of the Token as for the hidden image.
+    * @dev This are four functions related to set the URI of the Token.
     */    
-    function setTokenURI(uint tokenId, string memory _tokenURI)
-        public {
-
-            tokenId = _nftId.current();
-            require
-                (_isApprovedOrOwner(_msgSender(), tokenId),
-                "ERC721: transfer caller is not the owner nor approved");
-            _setTokenURI(tokenId, _tokenURI);
-            
-
-    }
     function tokenURI(uint256 tokenId)
         public
         view
-        virtual
-        override
+        override (ERC721, ERC721URIStorage)
         returns (string memory) {
 
-            tokenId = _nftId.current(); 
-            require
-                (_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
             if (revealed == false) {
                 
-                return hiddenMetadataUri;
+                return "ipfs://QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G";
             }
-            string memory currentBaseURI = _baseURI();
-            return bytes(currentBaseURI).length > 0
-            ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), uriSuffix))
-            : "";
-    }
-
-    function setHiddenMetadataUri(string memory _hiddenMetadataUri) 
-        public 
-        onlyRole(ADMIN_ROLE) {
-
-            hiddenMetadataUri = _hiddenMetadataUri;
-    }
-
-    function setUriPrefix(string memory _uriPrefix) 
-        public 
-        onlyRole(ADMIN_ROLE) {
-
-            uriPrefix = _uriPrefix;
-    }
-
-    function setUriSuffix(string memory _uriSuffix) 
-        public 
-        onlyRole(ADMIN_ROLE) {
-
-            uriSuffix = _uriSuffix;
+            return super.tokenURI(tokenId);
     }
 
     function _baseURI() 
@@ -263,9 +203,8 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
         override 
         returns (string memory) {
 
-            return uriPrefix;
+            return "ipfs://";
     }
-
     /**
     *@dev a function to withdraw the payments for the mint.
     */
@@ -276,7 +215,6 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
         
             payable(msg.sender).transfer(address(this).balance);        
     }
-
     /**
     * @dev the next three functions are used only for the test of the contract
     */
@@ -295,5 +233,8 @@ contract TheLittleTraveler is ERC721URIStorage, AccessControl {
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, AccessControl)
     returns (bool) {
         return super.supportsInterface(interfaceId);
-    }    
+    } 
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
+    }   
 }

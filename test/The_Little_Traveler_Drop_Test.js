@@ -87,42 +87,16 @@ describe("The_Little_Traveler_Drop", function () {
      await thelittletraveler_contract.whitelistmint();
      expect(await thelittletraveler_contract.ownerOf(0)).to.equal(admin_role.address);        
       
-    });
-        
-    xit("Should add an address to the whitelist by paying 0.005 ethers", async function () {
+    });  
 
-            
-        
-   
-    });
-
-    xit("Should give an address the minter role by paying 0.01 ethers", async function () {
-   
-        await thelittletraveler_contract.connect(minter_role).grantMinterRole
-            ({value: ethers.utils.parseEther("0.01")});
-        await thelittletraveler_contract._grantRole(MINTER_ROLE, minter_role.address);
-        expect(await thelittletraveler_contract.isMinter(minter_role.address)).to.be.equal(true);
-
-           
-
-    });
-
-
-
-    xit("Should allow the normal users to mint", async function () {
+    it("Should allow the normal users to mint", async function () {
 
         await thelittletraveler_contract.setPaused(false);
+        await thelittletraveler_contract.setRevealed(true);
+        await thelittletraveler_contract.connect(collaborator).grantMinterRole
+        ({value: ethers.utils.parseEther("0.01")});
         await thelittletraveler_contract.connect(collaborator).mint();
-        expect(await thelittletraveler_contract.ownerOf(1)).to.equal(collaborator.address);
-   
+        expect(await thelittletraveler_contract.ownerOf(1)).to.equal(collaborator.address);   
     });
-
-
-
-    xit("Token URI generation", async function () {
-     
-      });
-
-
 });
 

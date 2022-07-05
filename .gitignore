@@ -5,6 +5,9 @@ node_modules
 coverage
 coverage.json
 typechain
+build
+build copy
+
 
 #Hardhat files
 cache

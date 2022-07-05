@@ -1,0 +1,11 @@
+{
+  "name": "New York trip",
+  "description": "I ride on a FDNY truck, AWESOME!",
+  "image": "ipfs://QmeLGpb3UAKm3ya46qHyoYJ5CLBzaFVycdzpS5LYMSRD5U",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "New_York"
+    }
+  ]
+}

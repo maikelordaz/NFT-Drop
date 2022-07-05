@@ -1,0 +1,134 @@
+[
+  {
+    "name": "Beijing trip",
+    "description": "The Chinesse food does not taste the same",
+    "image": "ipfs://QmTAcyMvHRHritUp35wetw6ba3C9qvLrMNkrx8X2fyXmiY",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Beijing"
+      }
+    ]
+  },
+
+  {
+    "name": "Berlin trip",
+    "description": "The people sound really mad",
+    "image": "ipfs://QmUbXLKp2RZxoGPisaxvVZgkdzFr7hNBP3oMBF2CFCPLcU",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Berlin"
+      }
+    ]
+  },
+
+  {
+    "name": "Caracas trip",
+    "description": "Where the bravest are born",
+    "image": "ipfs://QmVLzGqfR6urNXJjXvhqkrQPRnij7j8RcPgBwuAydJusTL",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Caracas"
+      }
+    ]
+  },
+
+  {
+    "name": "Dubai trip",
+  "description": "The Burj Khalifa is really high",
+  "image": "ipfs://QmWhRJe7Ut6BzY4Ep78LMwYVDfG19zysuauWpn8Dhx2ccN",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Dubai"
+    }
+  ]
+  },
+
+  {
+    "name": "London trip",
+    "description": "Do not let the muggles let you down",
+    "image": "ipfs://QmQWS1XzfGRXtHz9LCqrd7mHDcik6YFQ8GDzV1Ag9LFHtj",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "London"
+      }
+    ]
+  },
+
+  {
+    "name": "New York trip",
+    "description": "I ride on a FDNY truck, AWESOME!",
+    "image": "ipfs://QmeLGpb3UAKm3ya46qHyoYJ5CLBzaFVycdzpS5LYMSRD5U",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "New_York"
+      }
+    ]
+  },
+
+  {
+    "name": "Osaka trip",
+    "description": "楽しかったよ",
+    "image": "ipfs://QmTqcvheKs6mnVwh6Rg4vVLfGm4JCpeYnTqAAJGKUs9KwX",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Osaka"
+      }
+    ]
+  },
+
+  {
+    "name": "Paris",
+    "description": "I ate a le baguette",
+    "image": "ipfs://QmUJV7CNeonJAE3siJh9MYY93X3sZteLCSnKiDbtw6nZGJ",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Paris"
+      }
+    ]
+  },
+
+  {
+    "name": "Sidney trip",
+    "description": "I was looking for Nemo",
+    "image": "ipfs://QmQmUbz7PBK6KnK7eQDgo9mcdM16UWircLb3n7iWEpu46C",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Sidney"
+      }
+    ]
+  },
+
+  {
+    "name": "Tokio trip",
+    "description": "Fast & Furious",
+    "image": "ipfs://QmVNU9XeusUnXCXftyY5jdftHgkiAc5bsDxRXh1y1aDyNo",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "Tokio"
+      }
+    ]
+  },
+
+  {
+    "name": "Hidden",
+    "description": "???????",
+    "image": "ipfs://QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G",
+    "attributes": [
+      {
+        "trait_type": "Cities",
+        "value": "??????"
+      }
+    ]
+  }
+
+]

@@ -1,0 +1,11 @@
+{
+  "name": "Osaka trip",
+  "description": "楽しかったよ",
+  "image": "https://ipfs.io/ipfs/QmTqcvheKs6mnVwh6Rg4vVLfGm4JCpeYnTqAAJGKUs9KwX?filename=Osaka.png",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Osaka"
+    }
+  ]
+}

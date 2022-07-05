@@ -1,0 +1,11 @@
+{
+  "name": "Tokio trip",
+  "description": "Fast & Furious",
+  "image": "ipfs://QmVNU9XeusUnXCXftyY5jdftHgkiAc5bsDxRXh1y1aDyNo",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Tokio"
+    }
+  ]
+}

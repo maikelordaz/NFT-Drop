@@ -1,0 +1,11 @@
+{
+  "name": "Sidney trip",
+  "description": "I was looking for Nemo",
+  "image": "ipfs://QmQmUbz7PBK6KnK7eQDgo9mcdM16UWircLb3n7iWEpu46C",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Sidney"
+    }
+  ]
+}

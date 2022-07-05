@@ -1,0 +1,11 @@
+{
+  "name": "London trip",
+  "description": "Do not let the muggles let you down",
+  "image": "ipfs://QmQWS1XzfGRXtHz9LCqrd7mHDcik6YFQ8GDzV1Ag9LFHtj",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "London"
+    }
+  ]
+}

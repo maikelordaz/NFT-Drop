@@ -1,0 +1,11 @@
+{
+  "name": "Caracas trip",
+  "description": "Where the bravest are born",
+  "image": "ipfs://QmVLzGqfR6urNXJjXvhqkrQPRnij7j8RcPgBwuAydJusTL",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Caracas"
+    }
+  ]
+}

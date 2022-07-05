@@ -30,38 +30,27 @@ contract TheLittleTraveler is ERC721, ERC721URIStorage, AccessControl {
     Counters.Counter private _nftId;
     uint public maxSuply = 10;
     bool public paused = true;
-    bool public revealed = false;
     string [] internal _URIs;
     address public collaborator;
     
     //ROLES
         bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-        bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-        bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
         
     //FEES
-        uint public whitelistMintFee = 0.005 ether;
         uint public mintFee = 0.01 ether;
 
-    //WHITELIST MINT
-        uint mintedByWhiteList = 0;
-        uint maxWhiteListMint = 2;
-
-    //NORMAL MINT
-        uint minted = 2;
+    //MINT
+        uint minted = 0;
         uint maxMint = 10;
 
 //MAPPINGS
     mapping (address => uint) ownerTokenCount;
-    mapping (address => uint) whiteListUser; //To check if the user is from the whitelist.
 
 //FUNCTIONS
 
     constructor() ERC721("The Little Traveler", "TLT") {
 
         _setupRole(ADMIN_ROLE, msg.sender);
-        _setupRole(WHITELIST_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, collaborator);
         _URIs = ["QmXgRgBGBrbWgrt4NtNHYa8D7y6EWmgPe9jqv1si8aHUB6",
                  "QmRny92uQhNxwUMaWXqvLQkzy4BXJVDcRVGZSH6nf9BgMz",
                  "QmbvuE9aa1cM1CiKwWCtvpGbUz3kvU5xtEszvVVZFqUSWv",
@@ -86,73 +75,21 @@ contract TheLittleTraveler is ERC721, ERC721URIStorage, AccessControl {
         paused = _state;
     }
     /** 
-    * @dev this function is related to the hidden image before the NFT is revealed.
-      Only the admin can call this function.
-    * @param _state it gives true or false to the variable revealed.
+    * @dev this function is to check how many tokens are left
     */
-    function setRevealed(bool _state) 
+    function NFTLeft() 
         public 
-        onlyRole(ADMIN_ROLE) {
+        view 
+        returns (uint256) {
 
-            revealed = _state;
-    } 
-    /**
-    * @dev this function is to grant access to the whitelist to an address. If the address is part
-      of the whiteListUser mapping it has to pay 0.005 ethers to gain the whitelist role.
-    */
-    function grantWhiteListRole()
-        public 
-        payable {
-
-            uint whiteListReserved = whiteListUser[msg.sender];
-            require(whiteListUser[msg.sender] == whiteListReserved);
-            require
-                (msg.value == whitelistMintFee,
-                "You have to pay 0.005 ethers");        
-            _grantRole(WHITELIST_ROLE, msg.sender);
+            uint256 tokenLeft = maxSuply-minted;
+            return tokenLeft;
     }
     /**
-    * @dev this function is to grant the minter role to an address. It has to pay 0.01 ethers to
-      gain the minter role.
-    */
-    function grantMinterRole()
-        public {
-
-             _grantRole(MINTER_ROLE, msg.sender);
-    }
-    /**
-    * @dev this function is for the minting by the whitelist. It makes some checks, first paused
-      has to be false, second there has to be token left for the whitelist and third the address
-      can not have any token. Only the WHITELIST_ROLE can call it.
-    */
-    function whitelistmint() 
-        public 
-        onlyRole(WHITELIST_ROLE) {
-
-            require
-                (!paused, "The contract is paused!");
-            require
-                (mintedByWhiteList <= maxWhiteListMint,
-                "There are no more tokens to mint");
-            require
-                (ownerTokenCount[msg.sender] == 0,
-                "You can not mint any more");
-            uint256 tokenId = _nftId.current();
-            _nftId.increment();
-            _safeMint(msg.sender, tokenId); 
-            _setTokenURI(tokenId, _URIs[tokenId]);           
-            mintedByWhiteList++;
-            maxSuply--;
-            ownerTokenCount[msg.sender]++;         
-    }
-    /**
-    * @dev this function is for the minting by the regular users. It makes some checks, first paused
-      has to be false, second there has to be token left for the whitelist and third the address
-      can not have any token.
+    * @dev this function is for the minting the tokens. 
     */
     function mint() 
-        public 
-        onlyRole(MINTER_ROLE) 
+        public  
         payable {
 
             require
@@ -161,24 +98,13 @@ contract TheLittleTraveler is ERC721, ERC721URIStorage, AccessControl {
             require
                 (!paused, "The contract is paused!");
             require
-                (minted <= maxMint,
+                (minted < maxMint,
                 "There are no more tokens to mint");
             uint256 tokenId = _nftId.current();
             _nftId.increment();
             _safeMint(msg.sender, tokenId);
             _setTokenURI(tokenId, _URIs[tokenId]);
             minted++;
-            maxSuply--;
-    }
-    /** 
-    * @dev this function is to check how many tokens are left
-    */
-    function NFTLeft() 
-        public 
-        view 
-        returns (uint256) {
-
-            return maxSuply;
     }
     /**
     * @dev This are four functions related to set the URI of the Token.
@@ -189,11 +115,7 @@ contract TheLittleTraveler is ERC721, ERC721URIStorage, AccessControl {
         override (ERC721, ERC721URIStorage)
         returns (string memory) {
 
-            if (revealed == false) {
-                
-                return "ipfs://QmSFULtAbkQ7F5h3Uz1iDWGAQm3RncWbYjdZnwvFHkjP8G";
-            }
-            return super.tokenURI(tokenId);
+           return super.tokenURI(tokenId);
     }
 
     function _baseURI() 
@@ -216,16 +138,10 @@ contract TheLittleTraveler is ERC721, ERC721URIStorage, AccessControl {
             payable(msg.sender).transfer(address(this).balance);        
     }
     /**
-    * @dev the next three functions are used only for the test of the contract
+    * @dev the next function are used only for the test of the contract
     */
     function isAdmin(address account) public virtual view returns(bool) {
         return hasRole(ADMIN_ROLE, account);
-    }
-    function isWhitelist(address account) public virtual view returns(bool) {
-        return hasRole(WHITELIST_ROLE, account);
-    }
-    function isMinter(address account) public virtual view returns(bool) {            
-        return hasRole(MINTER_ROLE, account);
     }
     /**
     * @dev last but not least a function to overcome the override of inheritaded contracts

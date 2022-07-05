@@ -1,0 +1,11 @@
+{
+  "name": "Berlin trip",
+  "description": "The people sound really mad",
+  "image": "ipfs://QmUbXLKp2RZxoGPisaxvVZgkdzFr7hNBP3oMBF2CFCPLcU",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Berlin"
+    }
+  ]
+}

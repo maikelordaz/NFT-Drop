@@ -1,0 +1,11 @@
+{
+  "name": "Dubai trip",
+  "description": "The Burj Khalifa is really high",
+  "image": "ipfs://QmWhRJe7Ut6BzY4Ep78LMwYVDfG19zysuauWpn8Dhx2ccN",
+  "attributes": [
+    {
+      "trait_type": "Cities",
+      "value": "Dubai"
+    }
+  ]
+}

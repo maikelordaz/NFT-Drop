@@ -1,20 +1,40 @@
-# The Litle Traveler
+# NFT Drop - The Litle Traveler
 
-This is a drop of some NFT´s with images of a great little traveler. The drop consist of ten images, and five of them are already minted.
-The contract is already deploy on rinkeby and is verified as well, the address is:
-                                      
-                                      0xA7b7E99fd79E396e78466e7FbC1B12343FBF1b20
+This is a drop of some NFT´s with images of a great little traveler. The drop consist 
+of ten images. The contract is already deploy on rinkeby and is verified as well, the 
+address is:
 
-To interact with the contract on Etherscan first you have to check on the "Read Contract" section the following:
+ > 0xED79c273A5b9f7601b17e9fC2D908750Aa93817a
 
-    - The paused variable has to be "false" so you can mint.
-    - To change the state of the paused variable, go to the "Write Contract" section and look for the "setPaused" function, change the value, pick write and pay the fee, refresh the page only after the transaction is succesfull.
-    - The revealed variable has to be "true" if not you´ll only see a question mark image instead of your token.
-    -  To change the state of the revealed variable, go to the "Write Contract" section and look for the "setRevealed" function, change the value, pick write and pay the fee, refresh the page only after the transaction is succesfull.
+The contract has the next conditions to mint
 
-After this, you can pick the "mint" function and pay for 0.01 ETH. Then you can check on the "Read Contract" in the section "ownerOf" that you are the actual owner. The Tokens 0, 1, 2. 3 and 4 are already minted. Although on tokenURI you can see the metadata link on ipfs.
+* It has to be unpaused
+* You have to pay 0.01 ETH
 
-You can check it on the opensea testnet with the contract address, or with this link: 
+You can check it on the opensea testnet with the contract address, or with this [link](https://testnets.opensea.io/collection/the-little-traveler-goduvoycrd)
 
-https://testnets.opensea.io/collection/the-little-traveler-nmq99kfi9h
+## :rocket: INSTALLATION
+
+1. Clone this repo
+2. Install the dependencies with 
+    > npm install
+3. Run test with any of
+    > npx hardhat test
+    > npm run test
+  
+## :keyboard: CODE
+
+You can follow the code with the coments, they explain every function on the contract.
+
+## :abacus: TEST
+
+The tests are divided to check every contract functionality one by one.
+
+## :bookmark_tabs: CONTRIBUTE
+
+If you want to contribute just fork the repo and describe the changes you made.
+
+## :balance_scale: LICENSE
+
+MIT
 
